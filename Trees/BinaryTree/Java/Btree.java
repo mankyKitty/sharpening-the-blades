@@ -6,38 +6,14 @@
 ***/
 public class Btree {
 
-	public static Node root = new Node(12);
+	public static class Node {
 
-	public static void main(String[] args) {
+		int val;
+		Node left;
+		Node right;
 
-		insert(3, root);
-		insert(15, root);
-		insert(1, root);
-		insert(83, root);
-
-		delete(15, root);
-
-		if (search(15, root)) {
-			System.out.println("Delete is broken!! ..or possible search.");
-		}
-		else {
-			System.out.println("Search still works! ...I guess");
-		}
-
-		printAll(root);
-	}
-
-	public static void printAll(Node root) {
-
-		System.out.println("Node value: " + root.val);
-
-		if (null != root.left) {
-			System.out.println("Printing Left Values");
-			printAll(root.left);
-		}
-		if (null != root.right) {
-			System.out.println("Printing Right Values");
-			printAll(root.right);
+		Node(int startingValue) {
+			val = startingValue;
 		}
 	}
 
@@ -66,33 +42,18 @@ public class Btree {
 				current = new Node(0); // I guess this resets the tree? O.o
 			}
 			else if (null == current.left && null == current.right) {
-				if (del > previous.val) {
-					previous.right = null;
-				}
-				else {
-					previous.left = null;
-				}
+				deleteHelper(del, previous, null);
 			}
 			else if (null != current.left) {
 				Node tmp = current.left;
 				tmp.right = current.right;
 
-				if (tmp.val > previous.val) {
-					previous.right = tmp;
-				}
-				else {
-					previous.left = tmp;
-				}
+				deleteHelper(tmp.val, previous, tmp);
 			}
 			else if (null != current.right) {
 				Node tmp = current.right;
 
-				if (tmp.val > previous.val) {
-					previous.right = tmp;
-				}
-				else {
-					previous.left = tmp;
-				}
+				deleteHelper(tmp.val, previous, tmp);
 			}
 		}
 		else {
@@ -102,6 +63,15 @@ public class Btree {
 			else {
 				_delete(del, current.left, current);
 			}
+		}
+	}
+	
+	private static void deleteHelper(int val, Node target, Node targetValue) {
+		if (val > target.val) {
+			target.right = targetValue;
+		}
+		else {
+			target.left = targetValue;
 		}
 	}
 
@@ -134,14 +104,4 @@ public class Btree {
 			}
 		}
 	}
-
-	public static class Node {
-
-		int val;
-		Node left;
-		Node right;
-
-		Node(int startingValue) {
-			val = startingValue;
-		}
-	}}
+}
