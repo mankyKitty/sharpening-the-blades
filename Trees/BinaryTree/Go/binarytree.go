@@ -28,7 +28,7 @@ func New(value BTreeCompare) *BinaryTree {
 
 func (root *BinaryTree) Contains(value BTreeCompare) bool {
 	switch {
-	case root.value == value:
+	case value.EqualTo(root.value):
 		return true
 	case value.LessThan(root.value) && root.left != nil:
 		return root.left.Contains(value)
