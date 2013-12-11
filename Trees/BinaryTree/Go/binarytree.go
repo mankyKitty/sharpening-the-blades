@@ -44,6 +44,23 @@ func (root *BinaryTree) Delete(value BTreeCompare) {
 	}
 }
 
+func (root *BinaryTree) Insert(value BTreeCompare) {
+	switch {
+	case value.GreaterThan(root.value) && root.right == nil:
+		n := new(BinaryTree)
+		n.value = value
+		root.right = n
+	case value.LessThan(root.value) && root.left == nil:
+		n := new(BinaryTree)
+		n.value = value
+		root.left = n
+	case value.GreaterThan(root.value):
+		root.right.Insert(value)
+	case value.LessThan(root.value):
+		root.left.Insert(value)
+	}
+}
+
 func delete(value BTreeCompare, current, previous *BinaryTree) {
 	if value.EqualTo(current.value) {
 		switch {
@@ -77,22 +94,5 @@ func deleteHelper(val BTreeCompare, target, forTarget *BinaryTree) {
 		target.right = forTarget
 	} else {
 		target.left = forTarget
-	}
-}
-
-func (root *BinaryTree) Insert(value BTreeCompare) {
-	switch {
-	case value.GreaterThan(root.value) && root.right == nil:
-		n := new(BinaryTree)
-		n.value = value
-		root.right = n
-	case value.LessThan(root.value) && root.left == nil:
-		n := new(BinaryTree)
-		n.value = value
-		root.left = n
-	case value.GreaterThan(root.value):
-		root.right.Insert(value)
-	case value.LessThan(root.value):
-		root.left.Insert(value)
 	}
 }
