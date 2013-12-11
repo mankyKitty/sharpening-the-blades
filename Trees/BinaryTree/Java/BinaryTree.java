@@ -4,7 +4,13 @@
 * having to consult my own old source code or anyone else's implementation. I
 * know it's not great, eat me. :)
 ***/
-public class Btree {
+public class BinaryTree {
+
+	private static Node root;
+	
+	Btree(int first) {
+		this.root = new Node(first);
+	}
 
 	public static class Node {
 
@@ -16,8 +22,20 @@ public class Btree {
 			val = startingValue;
 		}
 	}
+	
+	public static void insertValue(int value) {
+		insert(value, this.root);
+	}
+	
+	public static void deleteValue(int value) {
+		_delete(delVal, this.root, null);
+	}
+	
+	public static boolean search(int value) {
+		search(value, this.root);
+	}
 
-	public static boolean search(int val, Node root) {
+	private static boolean search(int val, Node root) {
 		if (root.val == val) {
 			return true;
 		}
@@ -31,10 +49,36 @@ public class Btree {
 		return false;
 	}
 
-	public static void delete(int delVal, Node root) {
-		_delete(delVal, root, null);
-	}
+	private static void insert(int newVal, Node root) {
 
+		if (newVal > root.val) {
+			if (null == root.right) {
+				root.right = new Node(newVal);
+			}
+			else if (newVal < root.right.val){
+				Node n = new Node(newVal);
+				n.right = root.right;
+				root.right = n;
+			}
+			else {
+				insert(newVal, root.right);
+			}
+		}
+		else {
+			if (null == root.left) {
+				root.left = new Node(newVal);
+			}
+			else if (newVal > root.left.val) {
+				Node n = new Node(newVal);
+				n.left = root.left;
+				root.left = n;
+			}
+			else {
+				insert(newVal, root.left);
+			}
+		}
+	}
+	
 	private static void _delete(int del, Node current, Node previous) {
 		if (del == current.val) {
 
@@ -72,36 +116,6 @@ public class Btree {
 		}
 		else {
 			target.left = targetValue;
-		}
-	}
-
-	public static void insert(int newVal, Node root) {
-
-		if (newVal > root.val) {
-			if (null == root.right) {
-				root.right = new Node(newVal);
-			}
-			else if (newVal < root.right.val){
-				Node n = new Node(newVal);
-				n.right = root.right;
-				root.right = n;
-			}
-			else {
-				insert(newVal, root.right);
-			}
-		}
-		else {
-			if (null == root.left) {
-				root.left = new Node(newVal);
-			}
-			else if (newVal > root.left.val) {
-				Node n = new Node(newVal);
-				n.left = root.left;
-				root.left = n;
-			}
-			else {
-				insert(newVal, root.left);
-			}
 		}
 	}
 }
