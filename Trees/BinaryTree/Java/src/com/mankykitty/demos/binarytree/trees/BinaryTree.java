@@ -8,122 +8,122 @@ package com.mankykitty.demos.binarytree.trees;
  */
 public class BinaryTree {
 
-	private Node root;
+    private Node root;
 
     public BinaryTree() {}
 
     public BinaryTree(int first) {
-		root = new Node(first);
-	}
+        root = new Node(first);
+    }
 
-	private class Node {
+    private class Node {
 
-		int value;
-		Node left;
-		Node right;
+        int value;
+        Node left;
+        Node right;
 
-		Node(int startingValue) {
-			value = startingValue;
-		}
-	}
-	
-	public void insertValue(int value) {
-		if (null == root) {
-			root = new Node(value);
-			return;
-		}
-		insert(value, root);
-	}
-	
-	public void deleteValue(int value) {
-		delete(value, root, null);
-	}
-	
-	public boolean search(int value) {
-		return search(value, root);
-	}
+        Node(int startingValue) {
+            value = startingValue;
+        }
+    }
 
-	private boolean search(int value, Node root) {
-		if (root.value == value) {
-			return true;
-		}
+    public void insertValue(int value) {
+        if (null == root) {
+            root = new Node(value);
+            return;
+        }
+        insert(value, root);
+    }
 
-		if (value < root.value && null != root.left) {
-			return search(value, root.left);
-		}
-		if (value > root.value && null != root.right) {
-			return search(value, root.right);
-		}
-		return false;
-	}
+    public void deleteValue(int value) {
+        delete(value, root, null);
+    }
 
-	private void insert(int newVal, Node root) {
+    public boolean search(int value) {
+        return search(value, root);
+    }
 
-		if (newVal > root.value) {
-			if (null == root.right) {
-				root.right = new Node(newVal);
-			}
-			else if (newVal < root.right.value){
-				Node n = new Node(newVal);
-				n.right = root.right;
-				root.right = n;
-			}
-			else {
-				insert(newVal, root.right);
-			}
-		}
-		else {
-			if (null == root.left) {
-				root.left = new Node(newVal);
-			}
-			else if (newVal > root.left.value) {
-				Node n = new Node(newVal);
-				n.left = root.left;
-				root.left = n;
-			}
-			else {
-				insert(newVal, root.left);
-			}
-		}
-	}
-	
-	private void delete(int del, Node current, Node previous) {
-		if (del == current.value) {
+    private boolean search(int value, Node root) {
+        if (root.value == value) {
+            return true;
+        }
 
-			if (null == previous && null == current.left && null == current.right) {
-				current = new Node(0); // I guess this resets the tree? O.o
-			}
-			else if (null == current.left && null == current.right) {
-				deleteHelper(del, previous, null);
-			}
-			else if (null != current.left) {
-				Node tmp = current.left;
-				tmp.right = current.right;
+        if (value < root.value && null != root.left) {
+            return search(value, root.left);
+        }
+        if (value > root.value && null != root.right) {
+            return search(value, root.right);
+        }
+        return false;
+    }
 
-				deleteHelper(tmp.value, previous, tmp);
-			}
-			else if (null != current.right) {
-				Node tmp = current.right;
+    private void insert(int newVal, Node root) {
 
-				deleteHelper(tmp.value, previous, tmp);
-			}
-		}
-		else {
-			if (del > current.value) {
-				delete(del, current.right, current);
-			}
-			else {
-				delete(del, current.left, current);
-			}
-		}
-	}
-	
-	private void deleteHelper(int value, Node target, Node targetValue) {
-		if (value > target.value) {
-			target.right = targetValue;
-		}
-		else {
-			target.left = targetValue;
-		}
-	}
+        if (newVal > root.value) {
+            if (null == root.right) {
+                root.right = new Node(newVal);
+            }
+            else if (newVal < root.right.value){
+                Node n = new Node(newVal);
+                n.right = root.right;
+                root.right = n;
+            }
+            else {
+                insert(newVal, root.right);
+            }
+        }
+        else {
+            if (null == root.left) {
+                root.left = new Node(newVal);
+            }
+            else if (newVal > root.left.value) {
+                Node n = new Node(newVal);
+                n.left = root.left;
+                root.left = n;
+            }
+            else {
+                insert(newVal, root.left);
+            }
+        }
+    }
+
+    private void delete(int del, Node current, Node previous) {
+        if (del == current.value) {
+
+            if (null == previous && null == current.left && null == current.right) {
+                current = new Node(0); // I guess this resets the tree? O.o
+            }
+            else if (null == current.left && null == current.right) {
+                deleteHelper(del, previous, null);
+            }
+            else if (null != current.left) {
+                Node tmp = current.left;
+                tmp.right = current.right;
+
+                deleteHelper(tmp.value, previous, tmp);
+            }
+            else if (null != current.right) {
+                Node tmp = current.right;
+
+                deleteHelper(tmp.value, previous, tmp);
+            }
+        }
+        else {
+            if (del > current.value) {
+                delete(del, current.right, current);
+            }
+            else {
+                delete(del, current.left, current);
+            }
+        }
+    }
+
+    private void deleteHelper(int value, Node target, Node targetValue) {
+        if (value > target.value) {
+            target.right = targetValue;
+        }
+        else {
+            target.left = targetValue;
+        }
+    }
 }
