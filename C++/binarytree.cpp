@@ -11,7 +11,6 @@ class BinaryTree {
 
   void insert(int value, Tree* root);
   bool contains(int value, Tree* root);
-  Tree* newTree(int value);
 
   void pacman(Tree* root);
 
@@ -41,12 +40,6 @@ void BinaryTree::pacman(Tree* root) {
   delete root;
 }
 
-Tree* BinaryTree::newTree(int value) {
-  Tree n;
-  n.value = value;
-  return &n;
-}
-
 bool BinaryTree::contains(int value) {
   return BinaryTree::contains(value, root);
 }
@@ -71,7 +64,9 @@ void BinaryTree::insert(int value) {
 void BinaryTree::insert(int value, Tree* root) {
   if (value > root->value) {
     if (root->right == 0) {
-      root->right = BinaryTree::newTree(value);
+      Tree* tmp = new Tree;
+      tmp->value = value;
+      root->right = tmp;
     }
     else {
       insert(value, root->right);
@@ -79,7 +74,9 @@ void BinaryTree::insert(int value, Tree* root) {
   }
   else {
     if (root->left == 0) {
-      root->left = BinaryTree::newTree(value);
+      Tree* tmp = new Tree;
+      tmp->value = value;
+      root->left = tmp;
     }
     else {
       insert(value, root->left);
