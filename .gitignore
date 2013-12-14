@@ -15,6 +15,11 @@
 # OSX Files
 .DS_Store
 
+# IntelliJ Compile Directories
+*.iml
+.idea/
+out/
+
 *.class
 
 # Mobile Tools for Java (J2ME)
