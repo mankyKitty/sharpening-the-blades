@@ -1,5 +1,7 @@
 package com.mankykitty.demos.binarytree.trees;
 
+import com.mankykitty.demos.binarytree.trees.nodes.Node;
+
 /**
  * Super basic Binary Tree implementation that can be used for storing Ints.
  * Very useful yes? ... okay fine it isn't, but I did this from scratch without
@@ -16,114 +18,103 @@ public class BinaryTree {
         root = new Node(first);
     }
 
-    private class Node {
-
-        int value;
-        Node left;
-        Node right;
-
-        Node(int startingValue) {
-            value = startingValue;
-        }
-    }
-
     public void insertValue(int value) {
-        if (null == root) {
-            root = new Node(value);
+        if (null == this.root) {
+            this.root = new Node(value);
             return;
         }
-        insert(value, root);
+        insert(value, this.root);
     }
 
     public void deleteValue(int value) {
-        delete(value, root, null);
+        delete(value, this.root, null);
     }
 
     public boolean search(int value) {
-        return search(value, root);
+        return search(value, this.root);
     }
 
     private boolean search(int value, Node root) {
-        if (root.value == value) {
+        if (root.getValue() == value) {
             return true;
         }
 
-        if (value < root.value && null != root.left) {
-            return search(value, root.left);
+        if (value < root.getValue() && !root.isLeftEmpty()) {
+            return search(value, root.getLeft());
         }
-        if (value > root.value && null != root.right) {
-            return search(value, root.right);
+        if (value > root.getValue() && !root.isRightEmpty()) {
+            return search(value, root.getRight());
         }
         return false;
     }
 
     private void insert(int newVal, Node root) {
 
-        if (newVal > root.value) {
-            if (null == root.right) {
-                root.right = new Node(newVal);
+        if (newVal > root.getValue()) {
+            if (root.isRightEmpty()) {
+                root.setRight(new Node(newVal));
             }
-            else if (newVal < root.right.value){
+            else if (newVal < root.getRight().getValue()){
                 Node n = new Node(newVal);
-                n.right = root.right;
-                root.right = n;
+                n.setRight(root.getRight());
+                root.setRight(n);
             }
             else {
-                insert(newVal, root.right);
+                insert(newVal, root.getRight());
             }
         }
         else {
-            if (null == root.left) {
-                root.left = new Node(newVal);
+            if (root.isLeftEmpty()) {
+                root.setLeft(new Node(newVal));
             }
-            else if (newVal > root.left.value) {
+            else if (newVal > root.getLeft().getValue()) {
                 Node n = new Node(newVal);
-                n.left = root.left;
-                root.left = n;
+                n.setLeft(root.getLeft());
+                root.setLeft(n);
             }
             else {
-                insert(newVal, root.left);
+                insert(newVal, root.getLeft());
             }
         }
     }
 
     private void delete(int del, Node current, Node previous) {
-        if (del == current.value) {
+        if (del == current.getValue()) {
 
-            if (null == previous && null == current.left && null == current.right) {
+            if (null == previous && current.isLeftEmpty() && current.isRightEmpty()) {
                 current = new Node(0); // I guess this resets the tree? O.o
             }
-            else if (null == current.left && null == current.right) {
+            else if (current.isLeftEmpty() && current.isRightEmpty()) {
                 deleteHelper(del, previous, null);
             }
-            else if (null != current.left) {
-                Node tmp = current.left;
-                tmp.right = current.right;
+            else if (!current.isLeftEmpty()) {
+                Node tmp = current.getLeft();
+                tmp.setRight(current.getRight());
 
-                deleteHelper(tmp.value, previous, tmp);
+                deleteHelper(tmp.getValue(), previous, tmp);
             }
-            else if (null != current.right) {
-                Node tmp = current.right;
+            else if (!current.isRightEmpty()) {
+                Node tmp = current.getRight();
 
-                deleteHelper(tmp.value, previous, tmp);
+                deleteHelper(tmp.getValue(), previous, tmp);
             }
         }
         else {
-            if (del > current.value) {
-                delete(del, current.right, current);
+            if (del > current.getValue()) {
+                delete(del, current.getRight(), current);
             }
             else {
-                delete(del, current.left, current);
+                delete(del, current.getLeft(), current);
             }
         }
     }
 
     private void deleteHelper(int value, Node target, Node targetValue) {
-        if (value > target.value) {
-            target.right = targetValue;
+        if (value > target.getValue()) {
+            target.setRight(targetValue);
         }
         else {
-            target.left = targetValue;
+            target.setLeft(targetValue);
         }
     }
 }
