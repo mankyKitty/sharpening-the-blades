@@ -16,9 +16,17 @@ public class Main {
             tree.insertValue(getRandomInt());
         }
 
+        // Erm...
         System.out.print(tree.toString());
     }
 
+    /**
+     * Retrieve a random int between 1 and 1000.
+     *
+     * I'm sure there is a built-in for this..
+     *
+     * @return int
+     */
     private static int getRandomInt() {
         int min = 1;
         int max = 1000;

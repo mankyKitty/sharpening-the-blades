@@ -10,111 +10,181 @@ import com.mankykitty.demos.binarytree.trees.nodes.Node;
  */
 public class BinaryTree {
 
+    // This is, evidently, the root of the tree.
     private Node root;
 
+    // Allow the tree to be instantiated without a initial value.
     public BinaryTree() {}
 
+    // Sometimes you might want to kick start the tree with your first value.
     public BinaryTree(int first) {
         root = new Node(first);
     }
 
+    /**
+     * Insert a value into the Binary Tree.
+     *
+     * If the tree has no current root, this will create the root node and return.
+     *
+     * If the tree has values, then we delve into the structure of the tree in an attempt to locate
+     * the correct location for our new value. Remembering that this is a bog standard binary tree.
+     *
+     * We make no attempts to balance the values.
+     *
+     * @param value int
+     */
     public void insertValue(int value) {
         if (null == this.root) {
+            // Empty tree, instantiate root and return.
             this.root = new Node(value);
             return;
         }
+        // We're going to need a bigger boat.
         insert(value, this.root);
     }
 
+    /**
+     * Delete the given value from the tree.
+     *
+     * This begins the process of deleting a node from the tree and ensuring the tree structure
+     * remains intact and correct.
+     *
+     * @param value int
+     */
     public void deleteValue(int value) {
+        // Start at the root and delete the value.
         delete(value, this.root, null);
     }
 
+    /**
+     * Establish if the tree contains the given value.
+     *
+     * Traverse the tree IN ORDER in an attempt to locate this value.
+     *
+     * @param value int
+     * @return boolean
+     */
     public boolean search(int value) {
+        // Start at the base and off we go!
         return search(value, this.root);
     }
 
+    /**
+     * Searches the tree recursively for our given value.
+     *
+     * @param value int
+     * @param root Node
+     * @return boolean
+     */
     private boolean search(int value, Node root) {
+
         if (root.getValue() == value) {
+            // Victory for Zim!
             return true;
         }
 
         if (value < root.getValue() && !root.isLeftEmpty()) {
+            // It's just a step to left...
             return search(value, root.getLeft());
         }
         if (value > root.getValue() && !root.isRightEmpty()) {
+            // and jump the right!
             return search(value, root.getRight());
         }
+        // Balls..
         return false;
     }
 
+    /**
+     * Inserts a new value into the tree structure ensuring it is inserted at
+     * the correct location in the structure. Left or Right leaf of an existing
+     * node.
+     *
+     * @param newVal int
+     * @param root Node
+     */
     private void insert(int newVal, Node root) {
 
+        // Determine if we need to be looking at the right or left side
+        // of this particular node.
         if (newVal > root.getValue()) {
             if (root.isRightEmpty()) {
+                // Easy case, right is empty. Create a node and place it there.
                 root.setRight(new Node(newVal));
             }
             else if (newVal < root.getRight().getValue()){
+                // Right value is not empty, but our value is less than it. To ensure
+                // the structure of the tree remains correct, create a node for our value
+                // and place the right value as it's child node, placing the new value as
+                // the right value to this parent.
                 Node n = new Node(newVal);
                 n.setRight(root.getRight());
                 root.setRight(n);
             }
             else {
+                // "We're going to have to go deeper"
                 insert(newVal, root.getRight());
             }
         }
         else {
             if (root.isLeftEmpty()) {
+                // Easy case! No left node so spin one up and place it in.
                 root.setLeft(new Node(newVal));
             }
             else if (newVal > root.getLeft().getValue()) {
+                // Same case as right node, we have a new value that is less than the parent but
+                // greater than the child. Tree section must be reconfigured to handle the new value.
                 Node n = new Node(newVal);
                 n.setLeft(root.getLeft());
                 root.setLeft(n);
             }
             else {
+                // Wheeeeeeeeeee!
                 insert(newVal, root.getLeft());
             }
         }
     }
 
+    /**
+     * Deletes the given value from the tree whilst preserving the rules of the tree.
+     *
+     * I'm not 100% I handle all cases correctly.
+     * 
+     * @param del int
+     * @param current Node
+     * @param previous Node
+     */
     private void delete(int del, Node current, Node previous) {
+        // We've located the value we're going to delete.
         if (del == current.getValue()) {
 
+            // Deleting the root node of an empty tree. -- NB 'previous' is not null for non-empty trees.
             if (null == previous && current.isLeftEmpty() && current.isRightEmpty()) {
                 current = new Node(0); // I guess this resets the tree? O.o
             }
             else if (current.isLeftEmpty() && current.isRightEmpty()) {
-                deleteHelper(del, previous, null);
+                // Delete this Node off the parent
+                previous.deleteHelper(del, null);
             }
             else if (!current.isLeftEmpty()) {
                 Node tmp = current.getLeft();
                 tmp.setRight(current.getRight());
-
-                deleteHelper(tmp.getValue(), previous, tmp);
+                // Rearrange the left and right values after a delete
+                previous.deleteHelper(tmp.getValue(), tmp);
             }
             else if (!current.isRightEmpty()) {
-                Node tmp = current.getRight();
-
-                deleteHelper(tmp.getValue(), previous, tmp);
+                // Rearrange the left and right values after a delete
+                previous.deleteHelper(current.getRight().getValue(), current.getRight());
             }
         }
         else {
+            // We have not found our value yet so keep going.
             if (del > current.getValue()) {
                 delete(del, current.getRight(), current);
             }
             else {
                 delete(del, current.getLeft(), current);
             }
-        }
-    }
-
-    private void deleteHelper(int value, Node target, Node targetValue) {
-        if (value > target.getValue()) {
-            target.setRight(targetValue);
-        }
-        else {
-            target.setLeft(targetValue);
         }
     }
 }

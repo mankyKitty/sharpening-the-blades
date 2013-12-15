@@ -44,4 +44,19 @@ public class Node {
     public boolean isRightEmpty() {
         return this.right == null;
     }
+
+    /**
+     * Ensure the correct child is set during a delete step.
+     *
+     * @param value int
+     * @param newChild Node
+     */
+    public void deleteHelper(int value, Node newChild) {
+        if (value > this.getValue()) {
+            this.setRight(newChild);
+        }
+        else {
+            this.setLeft(newChild);
+        }
+    }
 }
