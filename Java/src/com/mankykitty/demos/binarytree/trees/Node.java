@@ -1,4 +1,4 @@
-package com.mankykitty.demos.binarytree.trees.nodes;
+package com.mankykitty.demos.binarytree.trees;
 
 /**
  * Created by manky on 15/12/13.

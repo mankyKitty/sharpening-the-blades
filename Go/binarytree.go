@@ -20,6 +20,14 @@ type BinaryTree struct {
 	right *BinaryTree  // next larger value
 }
 
+func (tree *BinaryTree) resetLeaf(value BTreeCompare, newChild *BinaryTree) {
+	if value.GreaterThan(tree.value) {
+		tree.right = newChild
+	} else {
+		tree.left = newChild
+	}
+}
+
 func New(value BTreeCompare) *BinaryTree {
 	t := new(BinaryTree)
 	t.value = value
@@ -68,16 +76,16 @@ func delete(value BTreeCompare, current, previous *BinaryTree) {
 			// Errmmmmmmm....
 			current = new(BinaryTree)
 		case current.left == nil && current.right == nil:
-			deleteHelper(value, previous, nil)
+			previous.resetLeaf(value, nil)
 
 		case current.left != nil:
 			tmp := current.left
 			tmp.right = current.right
-			deleteHelper(tmp.value, previous, tmp)
+			previous.resetLeaf(tmp.value, tmp)
 
 		case current.right != nil:
 			tmp := current.right
-			deleteHelper(tmp.value, previous, tmp)
+			previous.resetLeaf(current.right.value, current.right)
 		}
 	} else {
 		switch {
@@ -86,13 +94,5 @@ func delete(value BTreeCompare, current, previous *BinaryTree) {
 		case value.GreaterThan(current.value) && current.right != nil:
 			delete(value, current.right, current)
 		}
-	}
-}
-
-func deleteHelper(val BTreeCompare, target, forTarget *BinaryTree) {
-	if val.GreaterThan(target.value) {
-		target.right = forTarget
-	} else {
-		target.left = forTarget
 	}
 }

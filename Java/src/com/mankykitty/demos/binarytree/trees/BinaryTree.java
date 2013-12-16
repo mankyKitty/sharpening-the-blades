@@ -1,7 +1,5 @@
 package com.mankykitty.demos.binarytree.trees;
 
-import com.mankykitty.demos.binarytree.trees.nodes.Node;
-
 /**
  * Super basic Binary Tree implementation that can be used for storing Ints.
  * Very useful yes? ... okay fine it isn't, but I did this from scratch without
@@ -65,6 +63,9 @@ public class BinaryTree {
      * @return boolean
      */
     public boolean search(int value) {
+        if (this.root == null) {
+            return false;
+        }
         // Start at the base and off we go!
         return search(value, this.root);
     }
@@ -81,18 +82,13 @@ public class BinaryTree {
         if (root.getValue() == value) {
             // Victory for Zim!
             return true;
-        }
-
-        if (value < root.getValue() && !root.isLeftEmpty()) {
+        } else if (value < root.getValue()) {
             // It's just a step to left...
-            return search(value, root.getLeft());
-        }
-        if (value > root.getValue() && !root.isRightEmpty()) {
+            return !root.isLeftEmpty() && search(value, root.getLeft());
+        } else {
             // and jump the right!
-            return search(value, root.getRight());
+            return !root.isRightEmpty() && search(value, root.getRight());
         }
-        // Balls..
-        return false;
     }
 
     /**
@@ -112,15 +108,6 @@ public class BinaryTree {
                 // Easy case, right is empty. Create a node and place it there.
                 root.setRight(new Node(newVal));
             }
-            else if (newVal < root.getRight().getValue()){
-                // Right value is not empty, but our value is less than it. To ensure
-                // the structure of the tree remains correct, create a node for our value
-                // and place the right value as it's child node, placing the new value as
-                // the right value to this parent.
-                Node n = new Node(newVal);
-                n.setRight(root.getRight());
-                root.setRight(n);
-            }
             else {
                 // "We're going to have to go deeper"
                 insert(newVal, root.getRight());
@@ -130,13 +117,6 @@ public class BinaryTree {
             if (root.isLeftEmpty()) {
                 // Easy case! No left node so spin one up and place it in.
                 root.setLeft(new Node(newVal));
-            }
-            else if (newVal > root.getLeft().getValue()) {
-                // Same case as right node, we have a new value that is less than the parent but
-                // greater than the child. Tree section must be reconfigured to handle the new value.
-                Node n = new Node(newVal);
-                n.setLeft(root.getLeft());
-                root.setLeft(n);
             }
             else {
                 // Wheeeeeeeeeee!
@@ -149,7 +129,7 @@ public class BinaryTree {
      * Deletes the given value from the tree whilst preserving the rules of the tree.
      *
      * I'm not 100% I handle all cases correctly.
-     * 
+     *
      * @param del int
      * @param current Node
      * @param previous Node
