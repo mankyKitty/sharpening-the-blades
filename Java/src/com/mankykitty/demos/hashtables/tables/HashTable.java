@@ -1,5 +1,7 @@
 package com.mankykitty.demos.hashtables.tables;
 
+import java.math.BigInteger;
+
 /**
  * Created by manky on 14/12/13.
  */
@@ -11,15 +13,20 @@ public class HashTable<ValueType> {
         CONTAINS_BUCKET
     }
 
+    private int increment = 4;
     private int tableLength = 7;
     private int tableDepth = 3;
+
+    private int storageCount = 0;
 
     // TODO: Handle the extension of the array when more values arrive.
     private Bucket<String, ValueType>[][] storage = new Bucket[tableLength][tableDepth];
 
     public void insert(String key, ValueType value) {
         int hash = hashFunction(key);
-        Bucket newBucket = new Bucket<String, ValueType>().setKey(key).setContents(value);
+        Bucket newBucket = new Bucket<String, ValueType>()
+                .setKey(key)
+                .setContents(value);
 
         int i = 0;
 
@@ -27,6 +34,32 @@ public class HashTable<ValueType> {
             i++;
         }
         storage[hash][i] = newBucket;
+        storageCount++;
+
+        if (storageCount >= (storage.length - increment)) {
+            System.out.println("Threshold exceeded... extending table.");
+            extendTable();
+            System.out.println("Table extension completed.");
+        }
+    }
+
+    /**
+     * Extend the size of the storage table, length ways.
+     */
+    private void extendTable() {
+        Bucket<String, ValueType>[][] tmpStorage = storage.clone();
+        int tmpStorageCount = storageCount;
+
+        storage = new Bucket[storage.length + increment][tableDepth];
+
+        for (int i = 0; i < tmpStorage.length; i++) {
+            for (int j = 0; j < tableDepth; j++) {
+                if (tmpStorage[i][j] != null) {
+                    insert(tmpStorage[i][j].getKey(), tmpStorage[i][j].getContents());
+                }
+            }
+        }
+        storageCount = tmpStorageCount;
     }
 
     public boolean delete(String key) {
