@@ -106,8 +106,7 @@ public class HashTable<ValueType> {
         return false;
     }
 
-
-    public int hashFunction(String keyValue) {
+    private int hashFunction(String keyValue) {
         int hashed = 0;
 
         for (char c : keyValue.toCharArray()) {
