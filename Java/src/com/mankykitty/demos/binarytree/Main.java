@@ -16,8 +16,17 @@ public class Main {
             tree.insertValue(getRandomInt());
         }
 
-        // Erm...
-        System.out.print(tree.toString());
+        System.out.println("Preorder Traversal");
+        tree.preorder();
+
+        System.out.println("Inorder Traversal");
+        tree.inorder();
+
+        System.out.println("Postorder Traversal");
+        tree.postorder();
+
+        System.out.println("Level Order Traversal");
+        tree.levelOrder();
     }
 
     /**

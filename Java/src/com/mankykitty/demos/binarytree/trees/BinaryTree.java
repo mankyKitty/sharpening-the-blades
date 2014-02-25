@@ -1,5 +1,7 @@
 package com.mankykitty.demos.binarytree.trees;
 
+import java.util.Deque;
+import java.util.LinkedList;
 /**
  * Super basic Binary Tree implementation that can be used for storing Ints.
  * Very useful yes? ... okay fine it isn't, but I did this from scratch without
@@ -17,6 +19,77 @@ public class BinaryTree {
     // Sometimes you might want to kick start the tree with your first value.
     public BinaryTree(int first) {
         root = new Node(first);
+    }
+
+    /**
+     * Preorder traversal
+     */
+    public void preorder() {
+        preorder_traverse(this.root);
+    }
+
+    /**
+     * Inorder traversal
+     */
+    public void inorder() {
+        inorder_traverse(this.root);
+    }
+
+    /**
+     * Postorder traversal
+     */
+    public void postorder() {
+        postorder_traverse(this.root);
+    }
+
+    /**
+     * Level Order Traversal
+     */
+    public void levelOrder() {
+        Deque<Node> contents = new LinkedList<Node>();
+        Node t = root;
+
+        while (t != null) {
+            System.out.println(t.getValue());
+
+            if (t.getLeft() != null) {
+                contents.add(t.getLeft());
+            }
+            if (t.getRight() != null) {
+                contents.add(t.getRight());
+            }
+
+            if (contents.size() != 0) {
+                t = contents.pop();
+            } else {
+                t = null;
+            }
+
+        }
+    }
+
+    private void preorder_traverse(Node root) {
+        if (root != null) {
+            System.out.println(root.getValue());
+            preorder_traverse(root.getLeft());
+            preorder_traverse(root.getRight());
+        }
+    }
+
+    private void inorder_traverse(Node root) {
+        if (root != null) {
+            inorder_traverse(root.getLeft());
+            System.out.println(root.getValue());
+            inorder_traverse(root.getRight());
+        }
+    }
+
+    private void postorder_traverse(Node root) {
+        if (root != null) {
+            postorder_traverse(root.getLeft());
+            postorder_traverse(root.getRight());
+            System.out.println(root.getValue());
+        }
     }
 
     /**
