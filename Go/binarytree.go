@@ -8,6 +8,10 @@
 // favourite data structures.ma
 package BinaryTree
 
+import (
+	"fmt"
+)
+
 type BTreeCompare interface {
 	LessThan(other BTreeCompare) bool
 	GreaterThan(other BTreeCompare) bool
@@ -32,6 +36,18 @@ func New(value BTreeCompare) *BinaryTree {
 	t := new(BinaryTree)
 	t.value = value
 	return t
+}
+
+func (root *BinaryTree) Preorder() {
+	preorder(root)
+}
+
+func preorder(root *BinaryTree) {
+	if root != nil {
+		fmt.Println(root.value)
+		preorder(root.left)
+		preorder(root.right)
+	}
 }
 
 func (root *BinaryTree) Contains(value BTreeCompare) bool {
