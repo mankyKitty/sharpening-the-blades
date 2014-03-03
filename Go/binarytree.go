@@ -39,10 +39,10 @@ func New(value BTreeCompare) *BinaryTree {
 }
 
 func (root *BinaryTree) Preorder() {
-	preorder(root)
+	preorder_print(root)
 }
 
-func preorder(root *BinaryTree) {
+func preorder_print(root *BinaryTree) {
 	if root != nil {
 		fmt.Println(root.value)
 		preorder(root.left)

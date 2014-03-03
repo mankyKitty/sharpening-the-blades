@@ -1,12 +1,62 @@
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
-class AdjList<T> {
-  HashMap<T, Integer> indices;
-  ArrayList<Node> g;
+public class AdjList {
+  public static void main(String[] args) {
+    Graph<Character> g = new Graph<Character>();
 
-  public AdjList() {
+    g.addVertex('a');
+    g.addVertex('b');
+    g.addVertex('c');
+
+    g.addEdge('a','b');
+    g.addEdge('b','c');
+    g.addEdge('b','a');
+
+
+    g.dfs();
+
+    System.out.println("woo?");
+  }
+}
+
+class Graph<T> {
+  private HashMap<T, Integer> indices;
+  private ArrayList<Node> g;
+
+  public Graph() {
     this.indices = new HashMap<T, Integer>();
-    this.g = new ArrayList<ArrayList<Integer>>();
+    this.g = new ArrayList<Node>();
+  }
+
+  public void dfs() {
+    ArrayList<Node> visited = new ArrayList<Node>();
+
+    dfs(this.g.get(0), visited);
+  }
+
+  private void visit(Node n, ArrayList<Node> visited) {
+    System.out.println(n.getValue());
+    visited.add(n);
+  }
+
+  private void dfs(Node x, ArrayList<Node> v) {
+    // Visit
+    visit(x, v);
+
+    Iterator itr = x.getEdges().iterator();
+    Integer nextConnectedNode;
+
+    while (itr.hasNext()) {
+      nextConnectedNode = (Integer) itr.next();
+      // If there is a node that we have not visited yet.
+      if (!v.contains(this.g.get(nextConnectedNode))) {
+        dfs(this.g.get(nextConnectedNode), v);
+      }
+
+    }
   }
 
   public boolean has(T v) {
@@ -31,6 +81,7 @@ class AdjList<T> {
       && this.vertexHasEdge(end, start);
   }
 
+  @SuppressWarnings("unchecked")
   private void setEdge(T start, int endI) {
     this.getVertex(start).edges.add(endI);
   }
@@ -40,12 +91,12 @@ class AdjList<T> {
   }
 
   public boolean addVertex(T v) {
-    Node newVertex;
+    Node<T> newVertex;
 
     if (!this.has(v)) {
 
       // Create our new node and add it to the graph
-      newVertex = new Node(v);
+      newVertex = new Node<T>(v);
       this.g.add(newVertex);
       // Store the index of this node for quick retrieval later
       this.indices.put(v, this.g.indexOf(newVertex));
@@ -61,11 +112,19 @@ class AdjList<T> {
 }
 
 class Node<T> {
-  T value;
-  ArrayList<Integer> edges;
+  public T value;
+  public ArrayList<Integer> edges;
 
   public Node(T v) {
     this.value = v;
     this.edges = new ArrayList<Integer>();
+  }
+
+  public ArrayList<Integer> getEdges() {
+    return this.edges;
+  }
+
+  public T getValue() {
+    return this.value;
   }
 }
