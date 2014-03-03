@@ -2,10 +2,17 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class AdjList {
   public static void main(String[] args) {
     Graph<Character> g = new Graph<Character>();
+
+    /**
+     * a -> b
+     *   \  |
+     *    - c
+     */
 
     g.addVertex('a');
     g.addVertex('b');
@@ -13,10 +20,15 @@ public class AdjList {
 
     g.addEdge('a','b');
     g.addEdge('b','c');
-    g.addEdge('b','a');
+    g.addEdge('c','a');
 
-
+	// Depth First Traverse
+	System.out.println("Depth First");
     g.dfs();
+
+	// Breadth First Traverse
+	System.out.println("Breadth First");
+	g.bfs();
 
     System.out.println("woo?");
   }
@@ -31,13 +43,55 @@ class Graph<T> {
     this.g = new ArrayList<Node>();
   }
 
+  /**
+   * Breadth First Traversal of the graph.
+   *
+   * Just prints the value of each node as it is visited.
+   */
+  public void bfs() {
+    ArrayList<Node> visited = new ArrayList<Node>();
+    LinkedList<Node> queue = new LinkedList<Node>();
+    Node x;
+    Iterator itr;
+    Integer nextConnectedNode;
+    
+    // visit(start node)
+    visit(this.g.get(0), visited);
+   
+    // queue <- start node
+    queue.add(this.g.get(0));
+    
+    // WHILE queue is not empty DO
+    while (queue.size() != 0) {
+    	// x <- queue
+    	x = queue.removeFirst();
+    	
+    	// FOR each y such that (x,y) is an edge and y has not been visited DO
+    	itr = x.getEdges().iterator();
+    	
+    	while (itr.hasNext()) {
+    		nextConnectedNode = (Integer) itr.next();
+    		if (!visited.contains(this.g.get(nextConnectedNode))) {
+    			visit(this.g.get(nextConnectedNode), visited);
+    			queue.add(this.g.get(nextConnectedNode));
+    		}
+    	}
+    }
+  }
+
+  /**
+   * Depth First Traversal of the graph.
+   *
+   * Simply prints each node as it is visited.
+   */
   public void dfs() {
     ArrayList<Node> visited = new ArrayList<Node>();
-
+    // We're using a recursive DFS so pass in our starting parameters and have at it.
     dfs(this.g.get(0), visited);
   }
 
   private void visit(Node n, ArrayList<Node> visited) {
+    // We're just printing at the moment, no need to get fancy.
     System.out.println(n.getValue());
     visited.add(n);
   }
@@ -45,17 +99,17 @@ class Graph<T> {
   private void dfs(Node x, ArrayList<Node> v) {
     // Visit
     visit(x, v);
-
+    // You know, Java, I think you still have a lot to learn.
     Iterator itr = x.getEdges().iterator();
     Integer nextConnectedNode;
 
     while (itr.hasNext()) {
+      // This is what I'm talking about...
       nextConnectedNode = (Integer) itr.next();
       // If there is a node that we have not visited yet.
       if (!v.contains(this.g.get(nextConnectedNode))) {
         dfs(this.g.get(nextConnectedNode), v);
       }
-
     }
   }
 
